@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fairytale AI - Ke Chuyen Co Tich</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      text-align: center;
+      color: #f9c74f;
+    }
+
+    p.subtitle {
+      color: #aaa;
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 560px;
+      backdrop-filter: blur(10px);
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #aaa;
+      margin-bottom: 6px;
+      margin-top: 20px;
+    }
+
+    label:first-child { margin-top: 0; }
+
+    .upload-area {
+      border: 2px dashed rgba(249,199,79,0.4);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .upload-area:hover { border-color: #f9c74f; background: rgba(249,199,79,0.05); }
+
+    .upload-area input[type=file] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    }
+
+    .upload-area img {
+      max-width: 100%; max-height: 200px;
+      border-radius: 8px; margin-top: 10px;
+    }
+
+    .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+    .upload-text { color: #888; font-size: 0.9rem; }
+
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: #eee;
+      padding: 12px 14px;
+      font-size: 0.95rem;
+      resize: none;
+      height: 90px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    textarea:focus { border-color: #f9c74f; }
+
+    button#btn-create {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: linear-gradient(135deg, #f9c74f, #f8961e);
+      border: none;
+      border-radius: 10px;
+      color: #1a1a2e;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button#btn-create:hover   { opacity: 0.9; transform: translateY(-1px); }
+    button#btn-create:active  { transform: translateY(0); }
+    button#btn-create:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Trang thai xu ly */
+    #status-box {
+      margin-top: 24px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    #status-box.loading { background: rgba(249,199,79,0.1); border: 1px solid #f9c74f; color: #f9c74f; }
+    #status-box.success { background: rgba(76,201,130,0.1); border: 1px solid #4cc982; color: #4cc982; }
+    #status-box.fail    { background: rgba(220,53,69,0.1);  border: 1px solid #dc3545; color: #f87171; }
+
+    /* Ket qua */
+    #result { margin-top: 32px; width: 100%; max-width: 560px; display: none; }
+
+    #result .story-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    #result h2 { color: #f9c74f; margin-bottom: 12px; font-size: 1.2rem; }
+
+    #result p.script {
+      color: #ccc;
+      line-height: 1.75;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    #result video {
+      width: 100%;
+      border-radius: 10px;
+      background: #000;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid #f9c74f;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Lich su */
+    #history { margin-top: 40px; width: 100%; max-width: 560px; }
+    #history h3 { color: #aaa; font-size: 0.95rem; margin-bottom: 12px; }
+    .history-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .history-item:hover { background: rgba(255,255,255,0.08); }
+    .history-item .hi-title { font-weight: 600; color: #f9c74f; font-size: 0.9rem; }
+    .history-item .hi-date  { font-size: 0.78rem; color: #777; margin-top: 3px; }
+    .history-item .badge {
+      font-size: 0.72rem; padding: 2px 8px; border-radius: 20px;
+      float: right; margin-top: 2px;
+    }
+    .badge.done    { background: #1a3a2a; color: #4cc982; }
+    .badge.pending { background: #3a2a0a; color: #f9c74f; }
+    .badge.failed  { background: #3a0a0a; color: #f87171; }
+  </style>
+</head>
+<body>
+
+  <h1>&#x1F9DA; Fairytale AI</h1>
+  <p class="subtitle">Tao video ke chuyen co tich tu hinh anh cua ban</p>
+
+  <div class="card">
+
+    <label>Chon hinh anh</label>
+    <div class="upload-area" id="upload-area">
+      <input type="file" id="file-input" accept="image/*" />
+      <div id="upload-placeholder">
+        <div class="upload-icon">&#x1F5BC;</div>
+        <div class="upload-text">Nhan vao day de chon anh</div>
+      </div>
+      <img id="preview-img" style="display:none" />
+    </div>
+
+    <label>Goi y noi dung cau chuyen</label>
+    <textarea id="user-text"
+              placeholder="Vi du: Co be dang dung trong rung, xung quanh co nhieu hoa dep va con thu nho..."></textarea>
+
+    <button id="btn-create" onclick="createStory()">
+      &#x2728; Tao Cau Chuyen
+    </button>
+
+    <div id="status-box"></div>
+  </div>
+
+  <div id="result">
+    <div class="story-card">
+      <h2 id="story-title"></h2>
+      <p class="script" id="story-script"></p>
+      <video id="story-video" controls></video>
+    </div>
+  </div>
+
+  <div id="history">
+    <h3>Lich su cau chuyen</h3>
+    <div id="history-list"></div>
+  </div>
+
+  <script>
+    const API = "http://localhost:8000";
+    let SESSION_ID = localStorage.getItem("session_id") || "";
+
+    // Xem truoc anh
+    document.getElementById("file-input").addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      document.getElementById("preview-img").src = url;
+      document.getElementById("preview-img").style.display = "block";
+      document.getElementById("upload-placeholder").style.display = "none";
+    });
+
+    function setStatus(msg, type) {
+      const box = document.getElementById("status-box");
+      box.style.display = "block";
+      box.className = type;
+      if (type === "loading") {
+        box.innerHTML = `<span class="spinner"></span>${msg}`;
+      } else {
+        box.textContent = msg;
+      }
+    }
+
+    async function createStory() {
+      const file     = document.getElementById("file-input").files[0];
+      const userText = document.getElementById("user-text").value.trim();
+
+      if (!file)     return alert("Vui long chon hinh anh!");
+      if (!userText) return alert("Vui long nhap goi y noi dung!");
+
+      const btn = document.getElementById("btn-create");
+      btn.disabled = true;
+
+      setStatus("Dang phan tich hinh anh va sinh kich ban...", "loading");
+
+      const form = new FormData();
+      form.append("file",       file);
+      form.append("user_text",  userText);
+      form.append("session_id", SESSION_ID);
+
+      try {
+        const res  = await fetch(`${API}/stories/create`, { method: "POST", body: form });
+        const json = await res.json();
+
+        if (!res.ok) throw new Error(json.detail || "Co loi xay ra");
+
+        const data = json.data;
+
+        // Luu session
+        SESSION_ID = data.session_id;
+        localStorage.setItem("session_id", SESSION_ID);
+
+        // Hien thi ket qua
+        document.getElementById("story-title").textContent  = data.title;
+        document.getElementById("story-script").textContent = data.script;
+        document.getElementById("story-video").src          = `${API}${data.video_url}`;
+        document.getElementById("result").style.display     = "block";
+
+        setStatus("Tao video thanh cong!", "success");
+        loadHistory();
+
+      } catch (err) {
+        setStatus("Loi: " + err.message, "fail");
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function loadHistory() {
+      if (!SESSION_ID) return;
+      try {
+        const res  = await fetch(`${API}/stories/session/${SESSION_ID}`);
+        const json = await res.json();
+        const list = json.data?.stories || [];
+        const el   = document.getElementById("history-list");
+
+        el.innerHTML = list.map(s => `
+          <div class="history-item" onclick="viewStory('${s.id}', '${(s.title||'').replace(/'/g, '')}', '${(s.script||'').replace(/'/g, '').replace(/\n/g, ' ')}', '${s.files?.video_path ? '/outputs/' + s.id + '.mp4' : ''}')">
+            <span class="badge ${s.status}">${s.status}</span>
+            <div class="hi-title">${s.title || 'Chua co tieu de'}</div>
+            <div class="hi-date">${new Date(s.created_at).toLocaleString('vi-VN')}</div>
+          </div>
+        `).join("");
+      } catch(e) {}
+    }
+
+    function viewStory(id, title, script, videoPath) {
+      document.getElementById("story-title").textContent  = title;
+      document.getElementById("story-script").textContent = script;
+      if (videoPath) {
+        document.getElementById("story-video").src = `${API}${videoPath}`;
+      }
+      document.getElementById("result").style.display = "block";
+      window.scrollTo({ top: 400, behavior: "smooth" });
+    }
+
+    // Load lich su khi mo trang
+    loadHistory();
+  </script>
+
+</body>
+</html>

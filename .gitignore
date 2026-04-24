@@ -1,0 +1,26 @@
+# Môi trường ảo (Quan trọng nhất - cực kỳ nặng)
+venv/
+ENV/
+env/
+
+# Các file sinh ra trong quá trình chạy (Audio, Video)
+backend/outputs/
+outputs/
+*.mp3
+*.mp4
+*.wav
+
+# File upload của người dùng
+backend/uploads/
+uploads/
+
+# Thông tin cấu hình bảo mật (Chứa API Key)
+.env
+
+# Cache của Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Thư mục của VS Code
+.vscode/
