@@ -1,56 +1,40 @@
 from moviepy.editor import (ImageClip, AudioFileClip,
-                             TextClip, CompositeVideoClip)
-from PIL import Image
-import numpy as np
+                             concatenate_videoclips, CompositeVideoClip)
 
 
-def create_video(image_path: str,
+def create_video(image_paths: list,
                  audio_path: str,
                  output_path: str,
                  title: str = "") -> str:
     """
-    Ghep anh + audio thanh video MP4.
-    - Hien thi anh trong suot thoi gian audio
-    - Them tieu de o phia tren anh
+    Ghep nhieu anh + 1 audio thanh video MP4.
+    - Moi anh hien thi dung phan deu thoi gian audio
+    - Co hieu ung fade giua cac canh
     - Tra ve duong dan video da luu
     """
-    # Doc audio lay do dai
-    audio = AudioFileClip(audio_path)
+    audio    = AudioFileClip(audio_path)
     duration = audio.duration
 
-    # Tao clip tu anh, resize ve 720p
-    img_clip = (
-        ImageClip(image_path)
-        .set_duration(duration)
-        .resize(height=720)
-        .fadein(0.5)
-        .fadeout(0.5)
-    )
+    # Chia deu thoi gian cho moi anh
+    n               = len(image_paths)
+    time_per_scene  = duration / n
 
-    clips = [img_clip]
+    clips = []
+    for i, img_path in enumerate(image_paths):
+        clip = (
+            ImageClip(img_path)
+            .set_duration(time_per_scene)
+            .resize(height=720)
+            .fadein(0.4)
+            .fadeout(0.4)
+        )
+        clips.append(clip)
 
-    # Them tieu de neu co (can cai imagemagick tren may)
-    # Neu loi thi bo comment doan try/except nay
-    try:
-        if title:
-            txt_clip = (
-                TextClip(title,
-                         fontsize=36,
-                         color="white",
-                         stroke_color="black",
-                         stroke_width=2,
-                         method="caption",
-                         size=(img_clip.w - 40, None))
-                .set_position(("center", 30))
-                .set_duration(duration)
-            )
-            clips.append(txt_clip)
-    except Exception:
-        pass  # Bo qua neu khong co ImageMagick
+    # Ghep tat ca canh lai
+    final_video = concatenate_videoclips(clips, method="compose")
+    final_video = final_video.set_audio(audio)
 
-    # Ghep va xuat video
-    final = CompositeVideoClip(clips).set_audio(audio)
-    final.write_videofile(
+    final_video.write_videofile(
         output_path,
         fps=24,
         codec="libx264",
@@ -59,5 +43,5 @@ def create_video(image_path: str,
     )
 
     audio.close()
-    final.close()
+    final_video.close()
     return output_path
