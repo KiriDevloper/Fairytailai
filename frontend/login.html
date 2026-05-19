@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Dang Nhap - FairytaleAI</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --gd: #1a3a2a;
+            --gm: #2d6a4f;
+            --gl: #52b788;
+            --gold: #c9a84c;
+            --goldl: #e8c97a;
+            --cream: #faf7f0;
+            --soft: #f0ede6;
+            --td: #1a2415;
+            --tm: #4a5e40;
+            --tl: #7a9070;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            height: 64px;
+            background: rgba(250, 247, 240, .94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(82, 183, 136, .2);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gd);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 24px;
+            background: radial-gradient(ellipse 70% 60% at 30% 50%, rgba(82, 183, 136, .1) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 70% at 75% 30%, rgba(149, 213, 178, .08) 0%, transparent 60%), var(--cream);
+        }
+
+        .form-wrap {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .form-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gd);
+            margin-bottom: 8px;
+        }
+
+        .form-sub {
+            font-size: .9rem;
+            color: var(--tl);
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 20px 60px rgba(26, 58, 42, .15);
+            border: 1px solid rgba(82, 183, 136, .15);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gm), var(--gl), var(--gold));
+            border-radius: 20px 20px 0 0;
+        }
+
+        .fg {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--tm);
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .inp {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(82, 183, 136, .25);
+            background: var(--soft);
+            font-family: 'Nunito', sans-serif;
+            font-size: .95rem;
+            color: var(--td);
+            outline: none;
+            transition: .2s;
+        }
+
+        .inp:focus {
+            border-color: var(--gl);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(82, 183, 136, .1);
+        }
+
+        .inp.err {
+            border-color: #e74c3c !important;
+            background: rgba(231, 76, 60, .03);
+        }
+
+        .pw-wrap {
+            position: relative;
+        }
+
+        .pw-wrap .inp {
+            padding-right: 48px;
+        }
+
+        .pw-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--tl);
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .check-row input[type=checkbox] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--gm);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .check-row label {
+            font-size: .83rem;
+            color: var(--tm);
+            text-transform: none;
+            letter-spacing: 0;
+            margin: 0;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .field-err {
+            font-size: .78rem;
+            color: #e74c3c;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .field-err.show {
+            display: block;
+        }
+
+        .btn-submit {
+            width: 100%;
+            margin-top: 8px;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--gd), var(--gm));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+            box-shadow: 0 6px 20px rgba(45, 106, 79, .35);
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(45, 106, 79, .45);
+        }
+
+        .btn-submit:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        #alert-box {
+            display: none;
+            margin-top: 16px;
+            padding: 13px 16px;
+            border-radius: 10px;
+            font-size: .88rem;
+        }
+
+        #alert-box.show {
+            display: block;
+        }
+
+        #alert-box.err {
+            background: rgba(231, 76, 60, .07);
+            border: 1px solid rgba(231, 76, 60, .3);
+            color: #c0392b;
+        }
+
+        #alert-box.ok {
+            background: rgba(82, 183, 136, .08);
+            border: 1px solid var(--gl);
+            color: var(--gd);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: var(--tl);
+            font-size: .85rem;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: rgba(82, 183, 136, .2);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .link-row {
+            text-align: center;
+            font-size: .88rem;
+            color: var(--tm);
+            margin-top: 20px;
+        }
+
+        .link-row a {
+            color: var(--gm);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .link-row a:hover {
+            text-decoration: underline;
+        }
+
+        .sp {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, .5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes fu {
+            from {
+                opacity: 0;
+                transform: translateY(24px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .form-wrap {
+            animation: fu .5s ease both;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="index.html" class="logo"><span style="font-size:1.5rem">🧚</span><span
+                class="logo-text">Fairytale<span>AI</span></span></a>
+        <a href="register.html"
+            style="padding:8px 20px;border-radius:8px;font-size:.85rem;font-weight:700;background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;text-decoration:none;">Dang
+            Ky</a>
+    </nav>
+
+    <div class="page">
+        <div class="form-wrap">
+            <div class="form-header">
+                <div class="form-icon">🔐</div>
+                <div class="form-title">Dang Nhap</div>
+                <div class="form-sub">Chao mung tro lai! Hay dang nhap de tiep tuc.</div>
+            </div>
+            <div class="card">
+                <div class="fg">
+                    <label>Ten tai khoan hoac Email</label>
+                    <input class="inp" id="ident" type="text" placeholder="username hoac email@gmail.com"
+                        autocomplete="username" />
+                    <div class="field-err" id="err-ident"></div>
+                </div>
+                <div class="fg">
+                    <label>Mat khau</label>
+                    <div class="pw-wrap">
+                        <input class="inp" id="pw" type="password" placeholder="Nhap mat khau"
+                            autocomplete="current-password" />
+                        <button class="pw-toggle" onclick="togglePw('pw',this)" type="button">👁</button>
+                    </div>
+                    <div class="field-err" id="err-pw"></div>
+                </div>
+                <div class="check-row">
+                    <input type="checkbox" id="remember" checked />
+                    <label for="remember">Luu dang nhap (7 ngay)</label>
+                </div>
+                <div id="alert-box"></div>
+                <button class="btn-submit" id="btn" onclick="doLogin()">Dang Nhap</button>
+                <div class="link-row" style="margin-top:20px;">Chua co tai khoan? <a href="register.html">Dang ky
+                        ngay</a></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:8000';
+        function togglePw(id, btn) { const i = document.getElementById(id); i.type = i.type === 'password' ? 'text' : 'password'; btn.textContent = i.type === 'password' ? '👁' : '🙈'; }
+        function showAlert(msg, t) { const b = document.getElementById('alert-box'); b.className = 'show ' + t; b.textContent = msg; }
+        function fieldErr(id, msg) { const e = document.getElementById('err-' + id), i = document.getElementById(id); if (msg) { e.textContent = msg; e.classList.add('show'); i.classList.add('err'); } else { e.classList.remove('show'); i.classList.remove('err'); } }
+
+        async function doLogin() {
+            const ident = document.getElementById('ident').value.trim();
+            const pw = document.getElementById('pw').value;
+            const rem = document.getElementById('remember').checked;
+            fieldErr('ident', ''); fieldErr('pw', '');
+            let ok = true;
+            if (!ident) { fieldErr('ident', 'Vui long nhap ten tai khoan hoac email'); ok = false; }
+            if (!pw) { fieldErr('pw', 'Vui long nhap mat khau'); ok = false; }
+            if (!ok) return;
+            const btn = document.getElementById('btn');
+            btn.disabled = true; btn.innerHTML = '<span class="sp"></span>Dang nhap...';
+            try {
+                const r = await fetch(`${API}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username_or_email: ident, password: pw, remember_me: rem }) });
+                const j = await r.json();
+                if (!r.ok) { showAlert(j.detail || 'Dang nhap that bai', 'err'); return; }
+                const store = rem ? localStorage : sessionStorage;
+                store.setItem('token', j.data.access_token);
+                store.setItem('user', JSON.stringify(j.data.user));
+                showAlert('Dang nhap thanh cong! Dang chuyen trang...', 'ok');
+                setTimeout(() => window.location.href = 'index.html', 800);
+            } catch (e) { showAlert('Loi ket noi server', 'err'); }
+            finally { btn.disabled = false; btn.textContent = 'Dang Nhap'; }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+        // Neu da dang nhap roi thi chuyen thang vao trang chu
+        if (localStorage.getItem('token') || sessionStorage.getItem('token')) window.location.href = 'index.html';
+    </script>
+</body>
+
+</html>
