@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Dang Ky - FairytaleAI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--gd:#1a3a2a;--gm:#2d6a4f;--gl:#52b788;--gold:#c9a84c;--goldl:#e8c97a;--cream:#faf7f0;--soft:#f0ede6;--td:#1a2415;--tm:#4a5e40;--tl:#7a9070;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--cream);min-height:100vh;display:flex;flex-direction:column;}
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:64px;background:rgba(250,247,240,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(82,183,136,.2);}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-text{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--gd);}
+.logo-text span{color:var(--gold);}
+.page{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 24px;background:radial-gradient(ellipse 70% 60% at 70% 50%,rgba(82,183,136,.1) 0%,transparent 60%),var(--cream);}
+.form-wrap{width:100%;max-width:480px;animation:fu .5s ease both;}
+.form-header{text-align:center;margin-bottom:32px;}
+.form-icon{font-size:2.8rem;margin-bottom:10px;}
+.form-title{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900;color:var(--gd);margin-bottom:6px;}
+.form-sub{font-size:.88rem;color:var(--tl);}
+.card{background:#fff;border-radius:20px;padding:36px;box-shadow:0 20px 60px rgba(26,58,42,.15);border:1px solid rgba(82,183,136,.15);position:relative;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gm),var(--gl),var(--gold));border-radius:20px 20px 0 0;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fg{margin-bottom:18px;}
+label{display:block;font-size:.8rem;font-weight:700;color:var(--tm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:7px;}
+.inp{width:100%;padding:12px 15px;border-radius:10px;border:1.5px solid rgba(82,183,136,.25);background:var(--soft);font-family:'Nunito',sans-serif;font-size:.93rem;color:var(--td);outline:none;transition:.2s;}
+.inp:focus{border-color:var(--gl);background:#fff;box-shadow:0 0 0 3px rgba(82,183,136,.1);}
+.inp.err{border-color:#e74c3c !important;}
+.pw-wrap{position:relative;}
+.pw-wrap .inp{padding-right:44px;}
+.pw-toggle{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--tl);}
+.field-err{font-size:.76rem;color:#e74c3c;margin-top:4px;display:none;}
+.field-err.show{display:block;}
+.checks{background:var(--soft);border-radius:12px;padding:16px;margin-bottom:16px;}
+.checks-title{font-size:.8rem;font-weight:700;color:var(--tm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;}
+.check-row:last-child{margin-bottom:0;}
+.check-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--gm);cursor:pointer;flex-shrink:0;margin-top:1px;}
+.check-row label{font-size:.83rem;color:var(--tm);text-transform:none;letter-spacing:0;margin:0;font-weight:600;cursor:pointer;line-height:1.5;}
+.check-row label a{color:var(--gm);}
+#err-terms{font-size:.78rem;color:#e74c3c;margin-top:6px;display:none;}
+#err-terms.show{display:block;}
+.btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--gd),var(--gm));border:none;border-radius:12px;color:#fff;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 6px 20px rgba(45,106,79,.35);}
+.btn-submit:hover:not(:disabled){transform:translateY(-2px);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;}
+#alert-box{display:none;margin-top:14px;padding:12px 16px;border-radius:10px;font-size:.87rem;}
+#alert-box.show{display:block;}
+#alert-box.err{background:rgba(231,76,60,.07);border:1px solid rgba(231,76,60,.3);color:#c0392b;}
+#alert-box.ok{background:rgba(82,183,136,.08);border:1px solid var(--gl);color:var(--gd);}
+.link-row{text-align:center;font-size:.87rem;color:var(--tm);margin-top:18px;}
+.link-row a{color:var(--gm);font-weight:700;text-decoration:none;}
+.sp{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.5);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo"><span style="font-size:1.5rem">🧚</span><span class="logo-text">Fairytale<span>AI</span></span></a>
+  <a href="login.html" style="padding:8px 20px;border-radius:8px;font-size:.85rem;font-weight:700;border:1.5px solid #2d6a4f;color:#2d6a4f;text-decoration:none;">Dang Nhap</a>
+</nav>
+
+<div class="page">
+  <div class="form-wrap">
+    <div class="form-header">
+      <div class="form-icon">✨</div>
+      <div class="form-title">Tao Tai Khoan</div>
+      <div class="form-sub">Dang ky mien phi va bat dau tao cau chuyen ngay hom nay!</div>
+    </div>
+    <div class="card">
+      <div class="fg">
+        <label>Ho va Ten</label>
+        <input class="inp" id="fullname" type="text" placeholder="Nguyen Van A"/>
+        <div class="field-err" id="err-fullname"></div>
+      </div>
+      <div class="row2">
+        <div class="fg">
+          <label>Ten Tai Khoan</label>
+          <input class="inp" id="username" type="text" placeholder="vana123"/>
+          <div class="field-err" id="err-username"></div>
+        </div>
+        <div class="fg">
+          <label>Email</label>
+          <input class="inp" id="email" type="email" placeholder="email@gmail.com"/>
+          <div class="field-err" id="err-email"></div>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Mat Khau</label>
+        <div class="pw-wrap">
+          <input class="inp" id="pw" type="password" placeholder="Toi thieu 6 ky tu"/>
+          <button class="pw-toggle" onclick="togglePw('pw',this)" type="button">👁</button>
+        </div>
+        <div class="field-err" id="err-pw"></div>
+      </div>
+      <div class="fg">
+        <label>Xac Nhan Mat Khau</label>
+        <div class="pw-wrap">
+          <input class="inp" id="pw2" type="password" placeholder="Nhap lai mat khau"/>
+          <button class="pw-toggle" onclick="togglePw('pw2',this)" type="button">👁</button>
+        </div>
+        <div class="field-err" id="err-pw2"></div>
+      </div>
+
+      <div class="checks">
+        <div class="checks-title">Dieu Khoan Su Dung</div>
+        <div class="check-row">
+          <input type="checkbox" id="t1"/>
+          <label for="t1">Toi dong y voi <a href="#">Dieu khoan dich vu</a> cua FairytaleAI</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="t2"/>
+          <label for="t2">Toi dong y voi <a href="#">Chinh sach bao mat</a> va xu ly du lieu ca nhan</label>
+        </div>
+        <div class="check-row">
+          <input type="checkbox" id="t3"/>
+          <label for="t3">Toi xac nhan da du 13 tuoi hoac co su dong y cua phu huynh</label>
+        </div>
+        <div class="field-err" id="err-terms"></div>
+      </div>
+
+      <button class="btn-submit" id="btn" onclick="doRegister()">Dang Ky Mien Phi</button>
+      <div id="alert-box"></div>
+      <div class="link-row">Da co tai khoan? <a href="login.html">Dang nhap ngay</a></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='http://localhost:8000';
+function togglePw(id,btn){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';btn.textContent=i.type==='password'?'👁':'🙈';}
+function fe(id,msg){const e=document.getElementById('err-'+id),i=document.getElementById(id);if(msg){e.textContent=msg;e.classList.add('show');if(i)i.classList.add('err');}else{e.classList.remove('show');if(i)i.classList.remove('err');}}
+function showAlert(msg,t){const b=document.getElementById('alert-box');b.className='show '+t;b.textContent=msg;}
+
+async function doRegister(){
+  const fn=document.getElementById('fullname').value.trim();
+  const un=document.getElementById('username').value.trim();
+  const em=document.getElementById('email').value.trim();
+  const pw=document.getElementById('pw').value;
+  const pw2=document.getElementById('pw2').value;
+  const t1=document.getElementById('t1').checked;
+  const t2=document.getElementById('t2').checked;
+  const t3=document.getElementById('t3').checked;
+
+  ['fullname','username','email','pw','pw2','terms'].forEach(id=>fe(id,''));
+  let ok=true;
+  if(!fn){fe('fullname','Vui long nhap ho ten');ok=false;}
+  if(!un||un.length<3){fe('username','Ten tai khoan phai tu 3 ky tu');ok=false;}
+  if(!em||!em.includes('@')){fe('email','Email khong hop le');ok=false;}
+  if(!pw||pw.length<6){fe('pw','Mat khau phai tu 6 ky tu');ok=false;}
+  if(pw!==pw2){fe('pw2','Mat khau xac nhan khong khop');ok=false;}
+  if(!t1||!t2||!t3){fe('terms','Vui long dong y tat ca dieu khoan');ok=false;}
+  if(!ok)return;
+
+  const btn=document.getElementById('btn');
+  btn.disabled=true;btn.innerHTML='<span class="sp"></span>Dang xu ly...';
+  try{
+    const r=await fetch(`${API}/auth/register`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({full_name:fn,username:un,email:em,password:pw,confirm_password:pw2,agreed_terms:t1,agreed_privacy:t2,agreed_age:t3})
+    });
+    const j=await r.json();
+    if(!r.ok){
+      const d=j.detail;
+      if(typeof d==='object'&&d.length){
+        d.forEach(e=>{const f=e.loc[e.loc.length-1];fe(f,e.msg);});
+      }else showAlert(typeof d==='string'?d:JSON.stringify(d),'err');
+      return;
+    }
+    localStorage.setItem('token',j.data.access_token);
+    localStorage.setItem('user',JSON.stringify(j.data.user));
+    showAlert('Dang ky thanh cong! Dang chuyen trang...','ok');
+    setTimeout(()=>window.location.href='index.html',800);
+  }catch(e){showAlert('Loi ket noi server','err');}
+  finally{btn.disabled=false;btn.textContent='Dang Ky Mien Phi';}
+}
+if(localStorage.getItem('token')||sessionStorage.getItem('token'))window.location.href='index.html';
+</script>
+</body>
+</html>
